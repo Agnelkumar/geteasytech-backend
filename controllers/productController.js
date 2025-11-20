@@ -6,20 +6,20 @@ export const createProduct = async (req, res) => {
   try {
     const body = req.body;
 
-    // FIX: map incoming keys to schema keys
+    // map incoming labels (with spaces) to database schema
     const productData = {
-      productName: body.ProductName,
-      mainCamera: body.MainCamera,
-      secondaryCamera: body.SecondaryCamera,
-      frontCamera: body.FrontCamera,
-      display: body.Display,
-      additional: body.Additional,
-      processor: body.Processor,
-      battery: body.Battery,
-      fingerprint: body.Fingerprint,
-      protectionGlass: body.ProtectionGlass,
-      variants: body.Variants,
-      price: body.Price
+      productName: body["Product Name"],
+      mainCamera: body["Main Camera"],
+      secondaryCamera: body["Secondary Camera"],
+      frontCamera: body["Front Camera"],
+      display: body["Display"],
+      additional: body["Additional"],
+      processor: body["Processor"],
+      battery: body["Battery"],
+      fingerprint: body["Fingerprint"],
+      protectionGlass: body["Protection Glass"],
+      variants: body["Variants"],
+      price: body["Price"]
     };
 
     const product = new Product(productData);
@@ -59,7 +59,7 @@ export const updateProduct = async (req, res) => {
     const body = req.body;
 
     const updated = {
-      productName: body.ProductName,
+      PproductName: body.ProductName,
       mainCamera: body.MainCamera,
       secondaryCamera: body.SecondaryCamera,
       frontCamera: body.FrontCamera,

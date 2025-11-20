@@ -8,9 +8,9 @@ const router = express.Router();
 // REGISTER
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, mobileNumber } = req.body;
 
-    if (!username || !email || !password)
+    if (!username || !email || !password )
       return res.status(400).json({ message: "All fields required" });
 
     const exists = await User.findOne({ $or: [{ username }, { email }] });
@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
     const newUser = await User.create({
       username,
       email,
+      mobileNumber,
       password: hashed,
       role: role || "user",
     });

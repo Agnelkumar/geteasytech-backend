@@ -18,6 +18,7 @@ export const createProduct = async (req, res) => {
       battery: body.Battery,
       fingerprint: body.Fingerprint,
       protectionGlass: body.ProtectionGlass,
+      variants: body.Variants,
       price: body.Price
     };
 
@@ -68,6 +69,7 @@ export const updateProduct = async (req, res) => {
       battery: body.Battery,
       fingerprint: body.Fingerprint,
       protectionGlass: body.ProtectionGlass,
+      variants: body.Variants,
       price: body.Price
     };
 

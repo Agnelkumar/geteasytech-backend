@@ -12,7 +12,8 @@ const ProductSchema = new mongoose.Schema({
   battery: { type: String, required: true },
   fingerprint: { type: String, default: "NA" },
   protectionGlass: { type: String, default: "NA" },
+  variants: { type: String, default: "NA"},
   price: { type: String, required: true },
-}, { timestamps: true });
+}, { timestamps: true});
 
 export default mongoose.model("Product", ProductSchema);

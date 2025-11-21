@@ -1,35 +1,46 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import path from "path";
-import productRoutes from "./routes/productRoutes.js";
-import userRoutes from "./routes/UserRoutes.js";
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/UserRoutes');
 
+dotenv.config();
 const app = express();
-app.use(cors());
+
+const allowedOrigins = [
+  "https://geteasytech-frontend.onrender.com",
+  "http://localhost:3000"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("❌ Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-// API routes
-app.use("/api", productRoutes);
-app.use("/api", userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/auth', userRoutes);
 
-// Serve React Build
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "geteasytech-frontend/build")));
-
-// SPA fallback — FIXES "NOT FOUND" ON REFRESH
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "geteasytech-frontend/build/index.html"));
-});
-
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => console.log("DB connected"))
-  .catch((err) => console.log(err));
-
-// Server start
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
-});
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('✅ MongoDB connected');
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+})
+.catch(err => console.error('❌ MongoDB connection error:', err));

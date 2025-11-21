@@ -1,25 +1,29 @@
 // controllers/productController.js
 import Product from "../models/Product.js";
 
+// helper to read either spaced or camelCase fields
+const getField = (body, spaced, camel) => {
+  return body[spaced] ?? body[camel] ?? "";
+};
+
 // CREATE product
 export const createProduct = async (req, res) => {
   try {
     const body = req.body;
 
-    // map incoming labels (with spaces) to database schema
     const productData = {
-      productName: body["Product Name"],
-      mainCamera: body["Main Camera"],
-      secondaryCamera: body["Secondary Camera"],
-      frontCamera: body["Front Camera"],
-      display: body["Display"],
-      additional: body["Additional"],
-      processor: body["Processor"],
-      battery: body["Battery"],
-      fingerprint: body["Fingerprint"],
-      protectionGlass: body["Protection Glass"],
-      variants: body["Variants"],
-      price: body["Price"]
+      productName: getField(body, "Product Name", "productName"),
+      mainCamera: getField(body, "Main Camera", "mainCamera"),
+      secondaryCamera: getField(body, "Secondary Camera", "secondaryCamera"),
+      frontCamera: getField(body, "Front Camera", "frontCamera"),
+      display: getField(body, "Display", "display"),
+      additional: getField(body, "Additional", "additional"),
+      processor: getField(body, "Processor", "processor"),
+      battery: getField(body, "Battery", "battery"),
+      fingerprint: getField(body, "Fingerprint", "fingerprint"),
+      protectionGlass: getField(body, "Protection Glass", "protectionGlass"),
+      variants: getField(body, "Variants", "variants"),
+      price: getField(body, "Price", "price")
     };
 
     const product = new Product(productData);
@@ -59,18 +63,18 @@ export const updateProduct = async (req, res) => {
     const body = req.body;
 
     const updated = {
-      PproductName: body.ProductName,
-      mainCamera: body.MainCamera,
-      secondaryCamera: body.SecondaryCamera,
-      frontCamera: body.FrontCamera,
-      display: body.Display,
-      additional: body.Additional,
-      processor: body.Processor,
-      battery: body.Battery,
-      fingerprint: body.Fingerprint,
-      protectionGlass: body.ProtectionGlass,
-      variants: body.Variants,
-      price: body.Price
+      productName: getField(body, "Product Name", "productName"),
+      mainCamera: getField(body, "Main Camera", "mainCamera"),
+      secondaryCamera: getField(body, "Secondary Camera", "secondaryCamera"),
+      frontCamera: getField(body, "Front Camera", "frontCamera"),
+      display: getField(body, "Display", "display"),
+      additional: getField(body, "Additional", "additional"),
+      processor: getField(body, "Processor", "processor"),
+      battery: getField(body, "Battery", "battery"),
+      fingerprint: getField(body, "Fingerprint", "fingerprint"),
+      protectionGlass: getField(body, "Protection Glass", "protectionGlass"),
+      variants: getField(body, "Variants", "variants"),
+      price: getField(body, "Price", "price")
     };
 
     const product = await Product.findByIdAndUpdate(

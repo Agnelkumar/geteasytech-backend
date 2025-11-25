@@ -11,6 +11,7 @@ const app = express();
 
 const allowedOrigins = [
   "https://geteasytech-frontend.onrender.com",
+  "https://geteasytech-pc.onrender.com",
   "http://localhost:3000"
 ];
 

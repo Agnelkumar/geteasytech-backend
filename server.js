@@ -34,6 +34,14 @@ app.use(express.json());
 app.use('/api/products', productRoutes);
 app.use('/api/auth', userRoutes);
 
+// Serve the static files from React build folder
+app.use(express.static(path.join(__dirname, "build")));
+
+// SPA fallback for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true

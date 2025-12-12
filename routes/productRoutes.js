@@ -1,18 +1,17 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   createProduct,
+  getProducts,
   updateProduct,
   deleteProduct,
-  getProductById,
-  getProducts
-} = require("../controllers/productController");
+} from "../controllers/productController.js";
 
 const router = express.Router();
 
 router.post("/", createProduct);
+router.get("/", getProducts);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
-router.get("/:id", getProductById);
-router.get("/", getProducts);
 
-module.exports = router;  // ✅ Correct export
+export default router;
+

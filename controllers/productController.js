@@ -1,12 +1,9 @@
-// controllers/productController.js
 import Product from "../models/Product.js";
 
-// helper to read either spaced or camelCase fields
-const getField = (body, spaced, camel) => {
-  return body[spaced] ?? body[camel] ?? "";
-};
+// Helper to support both spaced and camelCase fields
+const getField = (body, spaced, camel) => body[spaced] ?? body[camel] ?? "";
 
-// CREATE product
+// CREATE PRODUCT
 export const createProduct = async (req, res) => {
   try {
     const body = req.body;
@@ -17,13 +14,14 @@ export const createProduct = async (req, res) => {
       secondaryCamera: getField(body, "Secondary Camera", "secondaryCamera"),
       frontCamera: getField(body, "Front Camera", "frontCamera"),
       display: getField(body, "Display", "display"),
+      ipRating: getField(body, "IP Rating", "ipRating"),
       additional: getField(body, "Additional", "additional"),
-      processor: getField(body, "Processor", "processor"),
+      performance: getField(body, "Performance", "performance"),
       battery: getField(body, "Battery", "battery"),
       fingerprint: getField(body, "Fingerprint", "fingerprint"),
       protectionGlass: getField(body, "Protection Glass", "protectionGlass"),
       variants: getField(body, "Variants", "variants"),
-      price: getField(body, "Price", "price")
+      price: getField(body, "Price", "price"),
     };
 
     const product = new Product(productData);
@@ -35,29 +33,29 @@ export const createProduct = async (req, res) => {
   }
 };
 
-
-// GET all products
+// GET ALL PRODUCTS
 export const getProducts = async (req, res) => {
   try {
     const all = await Product.find();
     res.json(all);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
-// GET product by ID
+// GET PRODUCT BY ID
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: "Product not found" });
-    res.json(product);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const p = await Product.findById(req.params.id);
+    if (!p) return res.status(404).json({ message: "Product not found" });
+
+    res.json(p);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
 
-// UPDATE product
+// UPDATE PRODUCT
 export const updateProduct = async (req, res) => {
   try {
     const body = req.body;
@@ -68,34 +66,33 @@ export const updateProduct = async (req, res) => {
       secondaryCamera: getField(body, "Secondary Camera", "secondaryCamera"),
       frontCamera: getField(body, "Front Camera", "frontCamera"),
       display: getField(body, "Display", "display"),
+      ipRating: getField(body, "IP Rating", "ipRating"),
       additional: getField(body, "Additional", "additional"),
-      processor: getField(body, "Processor", "processor"),
+      operatingSystem: getField(body, "Operating System", "operatingSyatem"),
+      performance: getField(body, "Performance", "performance"),
       battery: getField(body, "Battery", "battery"),
       fingerprint: getField(body, "Fingerprint", "fingerprint"),
       protectionGlass: getField(body, "Protection Glass", "protectionGlass"),
       variants: getField(body, "Variants", "variants"),
-      price: getField(body, "Price", "price")
+      price: getField(body, "Price", "price"),
     };
 
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      updated,
-      { new: true }
-    );
-
+    const product = await Product.findByIdAndUpdate(req.params.id, updated, { new: true });
     res.json(product);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-// DELETE product
+// DELETE PRODUCT
 export const deleteProduct = async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Product not found" });
+    if (!deleted)
+      return res.status(404).json({ message: "Product not found" });
+
     res.json({ message: "Product deleted successfully" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };

@@ -1,47 +1,30 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const productRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/UserRoutes');
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
 
 dotenv.config();
+
 const app = express();
 
-const allowedOrigins = [
-  "https://geteasytech-frontend.onrender.com",
-  "https://geteasytech-pc.onrender.com",
-  "http://localhost:3000"
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("❌ Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
-
+// CORS (Development)
+app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
 
-app.use('/api/products', productRoutes);
-app.use('/api/auth', userRoutes);
+// Routes
+import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/UserRoutes.js";
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('✅ MongoDB connected');
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-})
-.catch(err => console.error('❌ MongoDB connection error:', err));
+app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
+app.use("/users", userRoutes);
+
+// Start DB + Server
+connectDB();
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

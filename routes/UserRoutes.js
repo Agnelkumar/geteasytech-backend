@@ -1,72 +1,54 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import express from "express";
+import {
+  registerMasterAdmin, bulkCreateUsers, downloadTemplate,
+  registerUser,
+  loginUser,
+  getAllUsersByState, changePassword, getAllUsers, getFilteredUsers, createStateAdmin,
+  getStateAdmins, deleteUser, findUser, bulkDeleteUsers,
+  downloadDeleteTemplate, exportUsers, 
+} from "../controllers/userController.js";
+import multer from "multer";
+import { protect } from "../middleware/authMiddleware.js";
 
+
+const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
 
-// REGISTER
-router.post("/register", async (req, res) => {
-  try {
-    const { username, email, password, role, mobileNumber } = req.body;
+router.post("/bulk-create", upload.single("file"), bulkCreateUsers);
 
-    if (!username || !email || !password )
-      return res.status(400).json({ message: "All fields required" });
+// ----- MASTER ADMIN -----
+router.post("/create-register-master", registerMasterAdmin);
 
-    const exists = await User.findOne({ $or: [{ username }, { email }] });
+// ----- NORMAL USERS (Created by State Admins) -----
+router.post("/register", registerUser);
 
-    if (exists)
-      return res.status(400).json({ message: "User already exists" });
+// ----- LOGIN -----
+router.post("/login", loginUser);
 
-    const hashed = await bcrypt.hash(password, 10);
+// ----- USER LIST (State Admin can view) -----
+router.get("/users-by-state", getAllUsersByState);
 
-    const newUser = await User.create({
-      username,
-      email,
-      mobileNumber,
-      password: hashed,
-      role: role || "user",
-    });
+//router.post("/bulk-create", bulkCreateUsers);
+router.get("/csv", downloadTemplate);
 
-    res.json({ message: "Registered successfully", user: newUser });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+router.put("/change-password", changePassword);
 
-// LOGIN
-router.post("/login", async (req, res) => {
-  try {
-    const { username, password, role } = req.body;
+router.get("/all", getAllUsers);
 
-    const user = await User.findOne({ username });
+router.get("/filtered-users", getFilteredUsers);
 
-    if (!user)
-      return res.status(400).json({ message: "Invalid username or password" });
+router.post("/create-state-admin", createStateAdmin);
+router.get("/state-admins", getStateAdmins);
 
-    const match = await bcrypt.compare(password, user.password);
+// ------------------ USER MANAGEMENT ------------------
+router.get("/find/:username", findUser);
+router.delete("/delete/:username", deleteUser);
 
-    if (!match)
-      return res.status(400).json({ message: "Invalid username or password" });
+// ------------------ BULK DELETE USERS ------------------
+router.post("/bulk-delete", bulkDeleteUsers);
+router.get("/delete-template", downloadDeleteTemplate);
 
-    if (role && role !== user.role)
-      return res.status(401).json({ message: "Invalid role selection" });
+router.get("/export", exportUsers);
+router.get("/export-users", protect, exportUsers);
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({
-      message: "Login successful",
-      token,
-      username: user.username,
-      role: user.role,
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-module.exports = router;
+export default router;

@@ -50,7 +50,6 @@ export const registerUser = async (req, res) => {
       email,
       password: hashed,
       mobileNumber,
-      role,
       state: state, // state-admin creates within own state
     });
 

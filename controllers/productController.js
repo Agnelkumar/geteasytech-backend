@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import { createGlobalNotification } from "./notificationController.js";
 
 // Helper to support both spaced and camelCase fields
 const getField = (body, spaced, camel) => body[spaced] ?? body[camel] ?? "";
@@ -26,6 +27,11 @@ export const createProduct = async (req, res) => {
 
     const product = new Product(productData);
     await product.save();
+    await createGlobalNotification({
+      type: "product",
+      title: "New product added",
+      message: `${product.productName} is now available in the product library.`,
+    });
 
     res.status(201).json(product);
   } catch (err) {

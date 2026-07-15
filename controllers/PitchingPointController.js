@@ -1,4 +1,5 @@
 import PitchingPoint from "../models/PitchingPoint.js";
+import { createGlobalNotification } from "./notificationController.js";
 
 
 // Create
@@ -26,6 +27,11 @@ export const createPitchingPoint = async (req, res) => {
     });
 
     await pitchingPoint.save();
+    await createGlobalNotification({
+      type: "pitching-point",
+      title: "New pitching point added",
+      message: `${title} has been added for ${category} customers.`,
+    });
 
     res.status(201).json(pitchingPoint);
   } catch (err) {
@@ -119,3 +125,46 @@ export const deletePitchingPoint = async (req, res) => {
     });
   }
 };
+
+// ============================================
+// Get All Categories
+// ============================================
+
+export const getCategories = async (req, res) => {
+    try {
+      const categories = await PitchingPoint.distinct("category");
+  
+      res.status(200).json(categories);
+    } catch (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  };
+  
+  // ============================================
+  // Search Pitching Points
+  // ============================================
+  
+  export const searchPitchingPoints = async (req, res) => {
+    try {
+      const { category, product } = req.query;
+  
+      if (!category || !product) {
+        return res.status(400).json({
+          message: "Category and Product are required",
+        });
+      }
+  
+      const pitchingPoints = await PitchingPoint.find({
+        category,
+        product,
+      }).populate("product", "productName");
+  
+      res.status(200).json(pitchingPoints);
+    } catch (err) {
+      res.status(500).json({
+        message: err.message,
+      });
+    }
+  };

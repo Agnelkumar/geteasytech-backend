@@ -15,10 +15,12 @@ app.use(express.json());
 // Routes
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
+import pitchingPointRoutes from "./routes/PitchingPointRoutes.js";
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/users", userRoutes);
+app.use("/api/pitchingpoint", pitchingPointRoutes);
 
 // Start DB + Server
 connectDB();

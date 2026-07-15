@@ -4,13 +4,8 @@ const pitchingPointSchema = new mongoose.Schema(
   {
     category: {
       type: String,
-      enum: [
-        "Gamer",
-        "Photo Enthusiast",
-        "Entertainment Purpose",
-        "Long Runner",
-      ],
       required: true,
+      trim: true,
     },
 
     product: {
@@ -34,6 +29,12 @@ const pitchingPointSchema = new mongoose.Schema(
     status: {
       type: Boolean,
       default: true,
+    },
+
+    viewCount: {
+      type: Number,
+      default: 0,
+      min: 0,
     },
   },
   {

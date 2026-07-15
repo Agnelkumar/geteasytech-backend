@@ -17,12 +17,14 @@ import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import pitchingPointRoutes from "./routes/PitchingPointRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import customerProfileRoutes from "./routes/customerProfileRoutes.js";
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/users", userRoutes);
 app.use("/api/pitchingpoint", pitchingPointRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/customer-profiles", customerProfileRoutes);
 
 // Start DB + Server
 connectDB();

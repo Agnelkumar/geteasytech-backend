@@ -30,3 +30,8 @@ export const protect = async (req, res, next) => {
     return res.status(401).json({ message: "No token" });
   }
 };
+
+export const masterAdminOnly = (req, res, next) => {
+  if (req.user?.role === "master-admin") return next();
+  return res.status(403).json({ message: "Only master admins can manage pitching points." });
+};

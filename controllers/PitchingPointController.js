@@ -78,6 +78,21 @@ export const getPitchingPointById = async (req, res) => {
   }
 };
 
+// Record a genuine detail view when a user opens a matching pitching point.
+export const recordPitchingPointView = async (req, res) => {
+  try {
+    const pitch = await PitchingPoint.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { viewCount: 1 } },
+      { new: true }
+    );
+    if (!pitch) return res.status(404).json({ message: "Pitching Point not found" });
+    res.json({ id: pitch._id, viewCount: pitch.viewCount });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 
 // Update
 export const updatePitchingPoint = async (req, res) => {

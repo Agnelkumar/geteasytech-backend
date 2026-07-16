@@ -5,10 +5,10 @@ import {
   loginUser,
   getAllUsersByState, changePassword, getAllUsers, getFilteredUsers, createStateAdmin,
   getStateAdmins, deleteUser, findUser, bulkDeleteUsers,
-  downloadDeleteTemplate, exportUsers, 
+  downloadDeleteTemplate, exportUsers, adminResetPassword,
 } from "../controllers/userController.js";
 import multer from "multer";
-import { protect } from "../middleware/authMiddleware.js";
+import { masterAdminOnly, protect } from "../middleware/authMiddleware.js";
 
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -32,6 +32,7 @@ router.get("/users-by-state", getAllUsersByState);
 router.get("/csv", downloadTemplate);
 
 router.put("/change-password", changePassword);
+router.put("/admin-reset-password/:id", protect, masterAdminOnly, adminResetPassword);
 
 router.get("/all", getAllUsers);
 

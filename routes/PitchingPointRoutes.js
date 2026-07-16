@@ -5,6 +5,8 @@ import {
   getPitchingPoints,
   getPitchingPointById,
   recordPitchingPointView,
+  getPitchViewAnalytics,
+  getMyPitchViewSummary,
   updatePitchingPoint,
   deletePitchingPoint,
 } from "../controllers/PitchingPointController.js";
@@ -16,6 +18,8 @@ router.post("/", protect, masterAdminOnly, createPitchingPoint);
 
 router.get("/", getPitchingPoints);
 
+router.get("/analytics/views", protect, masterAdminOnly, getPitchViewAnalytics);
+router.get("/analytics/my-summary", protect, getMyPitchViewSummary);
 router.get("/:id", getPitchingPointById);
 router.post("/:id/view", protect, recordPitchingPointView);
 
